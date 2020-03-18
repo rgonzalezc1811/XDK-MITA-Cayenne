@@ -34,10 +34,10 @@ var counterMotion = 0;
 setup theNetwork:WLAN
 {
     //Put the access point name here Access_Point_Name
-    ssid = "BTIA_GOR8MX";
+    ssid = "Access_Point_Name";
     
     //Put the access point password here Access_Point_Password
-    authentication = Personal(psk = "wjodhcwkafdk");
+    authentication = Personal(psk = "Access_Point_Password");
     
     ipConfiguration = Dhcp();
 }
