@@ -34,10 +34,10 @@ var counterMotion = 0;
 setup theNetwork:WLAN
 {
     //Put the access point name here Access_Point_Name
-    ssid = "Access_Point_Name";
+    ssid = "BTIA_GOR8MX";
     
     //Put the access point password here Access_Point_Password
-    authentication = Personal(psk = "Access_Point_Password");
+    authentication = Personal(psk = "wjodhcwkafdk");
     
     ipConfiguration = Dhcp();
 }
@@ -63,6 +63,7 @@ setup cayenne:MQTT
      *      - 1 for temperature data
      *      - 2 for light data
      *      - 3 for motion data
+     *      - 4 for noise data
      */
 
     clientId = "Your_Cayenne_ClientID";
@@ -70,6 +71,7 @@ setup cayenne:MQTT
     var tempTopic = topic("v1/Your_Cayenne_Username/things/Your_Cayenne_ClientID/data/1", 0);
     var lightTopic = topic("v1/Your_Cayenne_Username/things/Your_Cayenne_ClientID/data/2", 0);
     var motionTopic = topic("v1/Your_Cayenne_Username/things/Your_Cayenne_ClientID/data/3", 0);
+    var noiseTopic = topic("v1/Your_Cayenne_Username/things/Your_Cayenne_ClientID/data/4", 0);
 }
 
 setup environment
@@ -90,6 +92,12 @@ setup light
     manual_mode = true;
     integration_time = MS_800;
     high_brightness = false;
+}
+
+setup noise_sensor
+{
+    samplingFrequency = 22050;
+    timeout = 800;
 }
 
 /* Actions */
@@ -124,4 +132,11 @@ every 5000 milliseconds
     var lightValue = light.intensity.read();
     print(`Light intensity: ${lightValue} milliLuxes\n`);
     cayenne.lightTopic.write(`${lightValue}\n`);
+}
+
+every 1000 milliseconds
+{
+    var noise_value = noise_sensor.noise.read() * 100000000;
+    print(`Noise: ${noise_value} mV\r\n`);
+    cayenne.noiseTopic.write(`${noise_value}\n`);
 }
